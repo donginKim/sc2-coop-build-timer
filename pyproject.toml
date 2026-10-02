@@ -1,0 +1,32 @@
+[project]
+name = "sc2coop-timer"
+version = "0.1.0"
+description = "SC2 협동전 빌드 오더 타이머 (오버레이 + 음성)"
+requires-python = ">=3.11"
+dependencies = [
+    "PySide6>=6.6",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+win = [
+    "pywin32>=306; sys_platform == 'win32'",
+    "keyboard>=0.13.5; sys_platform == 'win32'",
+    "pyinstaller>=6.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["sc2coop_timer*"]
+
+[tool.setuptools.package-data]
+sc2coop_timer = ["builds/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
