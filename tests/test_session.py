@@ -56,7 +56,21 @@ def test_menu_hidden_and_toggle():
     assert s.update(R(State.MENU, 0.0)).visible is False
     s.toggle_visibility()
     assert s.update(R(State.MENU, 0.0)).visible is True
-    assert s.update(R(State.IN_GAME, 1.0)).visible is False
+
+
+def test_toggle_resets_when_game_starts():
+    s = Session(B)
+    s.update(R(State.MENU, 0.0))
+    s.toggle_visibility()
+    assert s.update(R(State.IN_GAME, 1.0)).visible is True
+
+
+def test_hidden_mid_game_stays_hidden_in_menu():
+    s = Session(B)
+    s.update(R(State.IN_GAME, 1.0))
+    s.toggle_visibility()
+    assert s.update(R(State.IN_GAME, 2.0)).visible is False
+    assert s.update(R(State.ENDED, 900.0)).visible is False
 
 
 def test_ended_does_not_speak():

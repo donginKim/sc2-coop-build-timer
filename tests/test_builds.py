@@ -191,3 +191,12 @@ def test_builds_by_commander_order():
     grouped = builds_by_commander(builds)
     assert list(grouped) == ["raynor", "zeratul"]
     assert [b.key for b in grouped["raynor"]] == ["r1", "r2"]
+
+
+def test_load_all_survives_unhashable_fields(tmp_path):
+    (tmp_path / "a.yaml").write_text("commander: [raynor]\nname: x\nsteps: [{at: '0:10', do: a}]\n", encoding="utf-8")
+    (tmp_path / "b.yaml").write_text("commander: raynor\nname: x\nsteps: [{at: '0:10', do: a, tag: [wave]}]\n", encoding="utf-8")
+    (tmp_path / "c.yaml").mkdir()
+    builds, errors = load_all([tmp_path])
+    assert builds == {}
+    assert [e.split(":")[0] for e in errors] == ["a.yaml", "b.yaml", "c.yaml"]

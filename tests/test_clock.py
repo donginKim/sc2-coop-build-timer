@@ -188,3 +188,16 @@ def test_demo_clock_speed_and_restart():
     demo.toggle_manual()
     assert demo.poll().seconds == 0.0
     assert demo.poll().game_id == 2
+
+
+def test_outage_mid_game_keeps_extrapolating():
+    now = FakeNow(0.0)
+    clock = GameClock(FakeApi([game(100)] + [FetchError("x")] * 3 + [game(104)]), now=now)
+    first = clock.poll()
+    for _ in range(3):
+        now.t += 1.0
+        r = clock.poll()
+    assert (r.state, r.seconds, r.mode, r.game_id) == (State.IN_GAME, 103.0, Mode.MANUAL, first.game_id)
+    now.t += 1.0
+    r = clock.poll()
+    assert (r.state, r.seconds, r.mode, r.game_id) == (State.IN_GAME, 104.0, Mode.AUTO, first.game_id)

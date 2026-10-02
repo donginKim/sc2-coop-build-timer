@@ -79,6 +79,8 @@ class GameClock:
         self._fails = 0
         self._mode = Mode.AUTO
         self._manual_start: float | None = None
+        self._outage = False  # API 장애로 자동 전환된 수동 모드 (복구 시 자동 모드로 복귀)
+        self._last_ok_at = 0.0
         self._game_id = 0
         self._last_state = State.MENU
         self._last_t = 0.0
@@ -91,6 +93,7 @@ class GameClock:
             self._game_id += 1
         else:
             self._manual_start = None
+        self._outage = False
 
     def poll(self) -> Reading:
         try:
@@ -98,11 +101,18 @@ class GameClock:
         except FetchError:
             self._fails += 1
             if self._fails >= self._fail_limit and self._mode is Mode.AUTO:
-                log.warning("SC2 API 연결 %d회 실패 — 수동 모드(F9)로 전환", self._fails)
+                log.warning("SC2 API 연결 %d회 실패 — 수동 모드(Ctrl+Alt+F9)로 전환", self._fails)
                 self._mode = Mode.MANUAL
+                if self._last_state is State.IN_GAME:
+                    # 게임 중 장애: 마지막 게임 시간에서 이어서 센다
+                    self._manual_start = self._last_ok_at - self._last_t
+                    self._outage = True
             return self._remember(self._fallback())
 
         self._fails = 0
+        if self._outage:
+            self._manual_start = None
+            self._outage = False
         if self._mode is Mode.MANUAL and self._manual_start is None:
             log.info("SC2 API 연결 복구 — 자동 모드")
             self._mode = Mode.AUTO
@@ -146,6 +156,7 @@ class GameClock:
         if new:
             self._game_id += 1
         self._last_state, self._last_t = state, t
+        self._last_ok_at = self._now()
 
     def _remember(self, reading: Reading) -> Reading:
         self._last = reading

@@ -73,7 +73,7 @@ def parse_build(data, key: str) -> Build:
         if field not in data:
             raise BuildError(f"필수 필드 누락: {field}")
     commander = data["commander"]
-    if commander not in COMMANDERS:
+    if not isinstance(commander, str) or commander not in COMMANDERS:
         raise BuildError(f"알 수 없는 사령관: {commander}")
     raw_steps = data["steps"]
     if not isinstance(raw_steps, list) or not raw_steps:
@@ -89,7 +89,7 @@ def parse_build(data, key: str) -> Build:
         except BuildError as e:
             raise BuildError(f"{where}: {e}") from None
         tag = raw.get("tag")
-        if tag is not None and tag not in TAGS:
+        if tag is not None and (not isinstance(tag, str) or tag not in TAGS):
             raise BuildError(f"{where}: tag는 wave/objective만 가능 ('{tag}')")
         if steps and at < steps[-1].at:
             raise BuildError(f"{where}: 시간 순서가 앞 단계보다 빠름")
@@ -115,6 +115,8 @@ def load_build(path: Path) -> Build:
         text = path.read_text(encoding="utf-8-sig")
     except UnicodeDecodeError:
         raise BuildError(f"{path.name}: UTF-8로 저장해야 함 (메모장 '다른 이름으로 저장' → 인코딩 UTF-8)") from None
+    except OSError as e:
+        raise BuildError(f"{path.name}: 파일을 읽을 수 없음 ({e.strerror})") from None
     try:
         data = yaml.safe_load(text)
     except yaml.YAMLError as e:

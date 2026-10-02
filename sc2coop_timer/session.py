@@ -1,4 +1,4 @@
-"""시계 읽기값 → 화면·음성 출력. 알린 단계와 F8 표시 상태를 보관한다."""
+"""시계 읽기값 → 화면·음성 출력. 알린 단계와 Ctrl+Alt+F8 표시 상태를 보관한다."""
 
 from dataclasses import dataclass
 
@@ -21,6 +21,7 @@ class Session:
         self._announced: frozenset[int] = frozenset()
         self._game_id: int | None = None
         self._flip = False
+        self._auto_shown: bool | None = None
 
     def set_build(self, build: Build | None) -> None:
         self.build = build
@@ -33,6 +34,10 @@ class Session:
         if reading.game_id != self._game_id:
             self._game_id = reading.game_id
             self._announced = frozenset()
+        auto_shown = overlay_visible(reading.state, False)
+        if auto_shown != self._auto_shown:
+            self._auto_shown = auto_shown
+            self._flip = False  # Ctrl+Alt+F8 수동 전환은 메뉴 ↔ 게임이 바뀌면 해제
 
         display: tuple[int, ...] = ()
         say: tuple[str, ...] = ()

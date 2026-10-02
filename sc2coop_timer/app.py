@@ -18,6 +18,8 @@ from .tts import Speaker
 log = logging.getLogger(__name__)
 
 POLL_MS = 500
+# SC2 기본 키(F5~F8 카메라, F10 게임 메뉴)와 겹치지 않도록 Ctrl+Alt 조합 사용
+HOTKEYS = {"overlay": "ctrl+alt+f8", "manual": "ctrl+alt+f9", "next_build": "ctrl+alt+f10"}
 APP_TITLE = "SC2 협동전 빌드 타이머"
 
 
@@ -39,6 +41,7 @@ class App:
         self.session = Session()
         self.builds: dict[str, Build] = {}
         self._build_actions = {}
+        self._menu_children = []
 
         self.overlay = Overlay(self.cfg.opacity)
         self.overlay.place(self.cfg.x, self.cfg.y)
@@ -72,9 +75,9 @@ class App:
                 "SC2 설정 → 그래픽 → 디스플레이 모드를 '창 모드(전체 화면)'으로 바꿔야 오버레이가 보입니다.",
             )
         register({
-            "f8": self.bridge.toggle_overlay.emit,
-            "f9": self.bridge.toggle_manual.emit,
-            "f10": self.bridge.next_build.emit,
+            HOTKEYS["overlay"]: self.bridge.toggle_overlay.emit,
+            HOTKEYS["manual"]: self.bridge.toggle_manual.emit,
+            HOTKEYS["next_build"]: self.bridge.next_build.emit,
         })
         self.timer.start()
         self._on_tick()
@@ -91,11 +94,15 @@ class App:
 
     def _rebuild_menu(self) -> None:
         self.menu.clear()
+        for child in self._menu_children:  # clear()는 하위 메뉴·그룹을 지우지 않는다
+            child.deleteLater()
         self._build_actions = {}
         group = QActionGroup(self.menu)
+        self._menu_children = [group]
         group.setExclusive(True)
         for commander, items in builds_by_commander(self.builds).items():
             sub = self.menu.addMenu(COMMANDERS[commander])
+            self._menu_children.append(sub)
             for build in items:
                 action = sub.addAction(build.name)
                 action.setCheckable(True)
@@ -110,7 +117,8 @@ class App:
         self.menu.addAction("빌드 폴더 열기").triggered.connect(
             lambda: QDesktopServices.openUrl(QUrl.fromLocalFile(str(user_builds_dir())))
         )
-        self.menu.addAction("빌드 다시 읽기").triggered.connect(self.reload_builds)
+        # 메뉴 항목의 시그널 처리 중에 그 메뉴를 지우지 않도록 다음 이벤트 루프로 미룬다
+        self.menu.addAction("빌드 다시 읽기").triggered.connect(lambda: QTimer.singleShot(0, self.reload_builds))
         self.menu.addSeparator()
         self.menu.addAction("종료").triggered.connect(QApplication.quit)
 
