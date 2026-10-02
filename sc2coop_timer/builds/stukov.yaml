@@ -1,32 +1,49 @@
-# ⚠️ 추정치 — 실제 플레이로 타이밍을 조정하세요
+# 출처: https://starcraft2coop.com/commanders/stukov — Build Order (원저자 Aommaster, CC-BY-NC-SA-4.0)
+# 위 빌드를 한국어로 옮기고 게임 시간을 덧붙인 2차 저작물이며 같은 CC-BY-NC-SA-4.0을 따릅니다.
+# ⚠️ supply(인구수)와 순서는 출처 기준, at(시간)은 인구수로부터 추정한 값입니다.
+# ⚠️ 4:00 웨이브 대비 이후의 일반 단계는 출처에 없는 추정 단계입니다.
 commander: stukov
-name: 스투코프 기본 (감염된 벙커 + 해병)
+name: 스투코프 경제 빌드
 verified: false
 steps:
-  - at: "0:00"
-    do: SCV 계속 생산
-  - at: "0:18"
-    do: 보급고
-  - at: "0:40"
-    do: 정제소 2개
-  - at: "0:55"
-    do: 감염된 병영
-    say: 병영
+  - at: "0:25"
+    supply: 15
+    do: "Overlord (보급)"
+    say: "보급"
+  - at: "0:30"
+    supply: 15
+    do: "정제소"
+  - at: "1:00"
+    supply: 19
+    do: "사령부 (바위 위치)"
+    say: "사령부"
+  - at: "1:15"
+    supply: 21
+    do: "정제소"
+  - at: "1:20"
+    supply: 21
+    do: "Anaerobic Enhancement 연구"
+    say: "업그레이드"
   - at: "1:30"
-    do: 감염된 벙커 배치
-    say: 벙커
-  - at: "2:10"
-    do: 공학 연구소, 업그레이드
-    say: 공학 연구소
-  - at: "3:00"
-    do: 확장 기지 정리 후 사령부
-    say: 확장 준비
+    supply: 22
+    do: "공학 연구소"
+  - at: "1:35"
+    supply: 22
+    do: "Overlord (보급)"
+    say: "보급"
+  - at: "1:50"
+    supply: 24
+    do: "Broodling Gestation 연구"
+    say: "업그레이드"
+  - at: "2:00"
+    supply: 25
+    do: "병영"
   - at: "4:00"
-    do: 첫 공격 웨이브 대비
+    do: "첫 공격 웨이브 대비"
     tag: wave
-  - at: "4:40"
-    do: 군수공장 계열 테크
-    say: 군수공장
+  - at: "5:00"
+    do: "공학 연구소·무기고 업그레이드 확인"
+    say: "업그레이드 확인"
   - at: "7:00"
-    do: 우주공항 계열 테크
-    say: 우주공항
+    do: "상위 테크 유닛 생산"
+    say: "상위 테크"

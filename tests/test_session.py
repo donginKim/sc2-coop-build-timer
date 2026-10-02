@@ -82,3 +82,36 @@ def test_no_build_frame():
     f = Session(None).update(R(State.IN_GAME, 5.0))
     assert f.say == ()
     assert f.view.title.startswith("빌드 없음")
+
+
+def test_skip_next_hides_and_silences_next_step():
+    s = Session(B)
+    s.update(R(State.IN_GAME, 1.0))
+    s.skip_next()
+    f = s.update(R(State.IN_GAME, 2.0))
+    assert [r.text for r in f.view.rows] == ["병영"]
+    assert s.update(R(State.IN_GAME, 37.0)).say == ()
+
+
+def test_skip_next_twice_skips_two_steps():
+    s = Session(B)
+    s.update(R(State.IN_GAME, 1.0))
+    s.skip_next()
+    s.skip_next()
+    assert s.update(R(State.IN_GAME, 2.0)).view.rows == ()
+
+
+def test_skips_reset_on_new_game_and_build_change():
+    s = Session(B)
+    s.update(R(State.IN_GAME, 1.0, game_id=1))
+    s.skip_next()
+    assert s.update(R(State.IN_GAME, 37.0, game_id=2)).say == ("보급고 올려",)
+    s.skip_next()
+    s.set_build(B)
+    assert [r.text for r in s.update(R(State.IN_GAME, 38.0, game_id=2)).view.rows] == ["보급고", "병영"]
+
+
+def test_skip_next_without_build_is_noop():
+    s = Session(None)
+    s.update(R(State.IN_GAME, 1.0))
+    s.skip_next()

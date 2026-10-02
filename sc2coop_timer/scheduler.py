@@ -20,9 +20,10 @@ def tick(
     announced: frozenset[int],
     lead: float,
     show: int = 3,
+    skipped: frozenset[int] = frozenset(),
 ) -> TickResult:
     t = game_seconds
     due = [i for i, s in enumerate(steps) if s.at - lead <= t]
-    announce = tuple(i for i in due if i not in announced and t < steps[i].at + LINGER)
-    display = tuple(i for i, s in enumerate(steps) if t < s.at + LINGER)[:show]
+    announce = tuple(i for i in due if i not in announced and i not in skipped and t < steps[i].at + LINGER)
+    display = tuple(i for i, s in enumerate(steps) if i not in skipped and t < s.at + LINGER)[:show]
     return TickResult(announce=announce, display=display, announced=frozenset(due))

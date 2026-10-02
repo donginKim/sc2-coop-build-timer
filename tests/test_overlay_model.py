@@ -63,3 +63,9 @@ def test_build_view_no_build():
 )
 def test_overlay_visible(state, flip, expected):
     assert overlay_visible(state, flip) is expected
+
+
+def test_build_view_supply_column():
+    b = Build("s", "raynor", "인구", False, 3.0, (Step(20, "보급고", "보급고", None, 14), Step(30, "정찰", "정찰")))
+    v = build_view(b, (0, 1), 0.0, Mode.AUTO)
+    assert [(r.supply, r.text) for r in v.rows] == [("14", "보급고"), ("", "정찰")]

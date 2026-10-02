@@ -11,6 +11,7 @@ class Row:
     time: str
     text: str
     style: str  # normal | due | wave | objective | done
+    supply: str = ""
 
 
 @dataclass(frozen=True)
@@ -44,7 +45,8 @@ def build_view(build: Build | None, display: tuple[int, ...], game_seconds: floa
             style = "due"
         else:
             style = step.tag or "normal"
-        rows.append(Row(fmt(step.at), step.do, style))
+        supply = "" if step.supply is None else str(step.supply)
+        rows.append(Row(fmt(step.at), step.do, style, supply))
 
     return View(
         title=f"{COMMANDERS[build.commander]} · {build.name}",

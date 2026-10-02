@@ -40,6 +40,7 @@ class Step:
     do: str
     say: str
     tag: str | None = None
+    supply: int | None = None  # 출처 빌드의 인구수 (표시용)
 
 
 @dataclass(frozen=True)
@@ -91,10 +92,13 @@ def parse_build(data, key: str) -> Build:
         tag = raw.get("tag")
         if tag is not None and (not isinstance(tag, str) or tag not in TAGS):
             raise BuildError(f"{where}: tag는 wave/objective만 가능 ('{tag}')")
+        supply = raw.get("supply")
+        if supply is not None and (isinstance(supply, bool) or not isinstance(supply, int) or supply < 0):
+            raise BuildError(f"{where}: supply는 0 이상 정수여야 함 ('{supply}')")
         if steps and at < steps[-1].at:
             raise BuildError(f"{where}: 시간 순서가 앞 단계보다 빠름")
         do = str(raw["do"])
-        steps.append(Step(at=at, do=do, say=str(raw.get("say") or do), tag=tag))
+        steps.append(Step(at=at, do=do, say=str(raw.get("say") or do), tag=tag, supply=supply))
 
     lead = data.get("lead_seconds", 3)
     if isinstance(lead, bool) or not isinstance(lead, (int, float)) or lead < 0:

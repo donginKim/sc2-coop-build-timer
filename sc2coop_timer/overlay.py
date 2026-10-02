@@ -61,7 +61,8 @@ class Overlay(QWidget):
             weight = "bold" if row.style == "due" else "normal"
             rows.append(
                 f"<tr style='color:{color}; font-weight:{weight}'>"
-                f"<td>{marker} {row.time}</td><td>&nbsp;{escape(row.text)}</td></tr>"
+                f"<td>{marker} {row.time}</td><td>{f'[{escape(row.supply)}]' if row.supply else ''}</td>"
+                f"<td>&nbsp;{escape(row.text)}</td></tr>"
             )
         self._label.setText(head + "<table>" + "".join(rows) + "</table>")
         self.adjustSize()

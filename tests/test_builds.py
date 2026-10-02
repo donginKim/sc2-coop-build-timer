@@ -200,3 +200,16 @@ def test_load_all_survives_unhashable_fields(tmp_path):
     builds, errors = load_all([tmp_path])
     assert builds == {}
     assert [e.split(":")[0] for e in errors] == ["a.yaml", "b.yaml", "c.yaml"]
+
+
+def test_parse_build_supply():
+    steps = [{"at": "0:20", "supply": 14, "do": "보급고"}, {"at": "0:30", "do": "정찰"}]
+    b = parse_build(valid_data(steps=steps), "t")
+    assert b.steps[0].supply == 14
+    assert b.steps[1].supply is None
+
+
+@pytest.mark.parametrize("bad", ["14", -1, True, 1.5])
+def test_parse_build_bad_supply(bad):
+    with pytest.raises(BuildError, match="1번째 단계: supply"):
+        parse_build(valid_data(steps=[{"at": "0:20", "supply": bad, "do": "a"}]), "t")

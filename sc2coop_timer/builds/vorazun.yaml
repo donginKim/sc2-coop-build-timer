@@ -1,32 +1,51 @@
-# ⚠️ 추정치 — 실제 플레이로 타이밍을 조정하세요
+# 출처: https://starcraft2coop.com/commanders/vorazun — Build Order (원저자 Aommaster, CC-BY-NC-SA-4.0)
+# 위 빌드를 한국어로 옮기고 게임 시간을 덧붙인 2차 저작물이며 같은 CC-BY-NC-SA-4.0을 따릅니다.
+# ⚠️ supply(인구수)와 순서는 출처 기준, at(시간)은 인구수로부터 추정한 값입니다.
+# ⚠️ 4:00 웨이브 대비 이후의 일반 단계는 출처에 없는 추정 단계입니다.
 commander: vorazun
-name: 보라준 기본 (암흑 기사 → 공허 포격기)
+name: 보라준 경제 빌드
 verified: false
 steps:
-  - at: "0:00"
-    do: 탐사정 계속 생산
-  - at: "0:18"
-    do: 수정탑
+  - at: "0:15"
+    supply: 13
+    do: "암흑 수정탑"
+  - at: "0:30"
+    supply: 15
+    do: "융화소"
   - at: "0:40"
-    do: 융화소 2개
+    supply: 16
+    do: "융화소"
   - at: "0:55"
-    do: 관문
-  - at: "1:30"
-    do: 인공제어소
+    supply: 18
+    do: "관문"
+  - at: "1:05"
+    supply: 19
+    do: "수정탑"
+  - at: "1:25"
+    supply: 22
+    do: "집결 지점을 확장 기지로"
+    say: "집결 확장"
+  - at: "1:35"
+    supply: 23
+    do: "인공제어소"
   - at: "2:00"
-    do: 황혼 의회
-  - at: "2:40"
-    do: 암흑 성소, 암흑 기사 생산
-    say: 암흑 성소
-  - at: "3:00"
-    do: 확장 연결체
-    say: 확장 준비
+    supply: 27
+    do: "Shadowguard → 가스 → 본진"
+    say: "섀도가드"
+  - at: "2:10"
+    supply: 28
+    do: "황혼 의회 + 차원 관문"
+    say: "황혼 의회"
+  - at: "2:20"
+    supply: 29
+    do: "융화소 + 연결체"
+    say: "연결체"
   - at: "4:00"
-    do: 첫 공격 웨이브 대비
+    do: "첫 공격 웨이브 대비"
     tag: wave
   - at: "5:00"
-    do: 우주관문 2개, 공허 포격기
-    say: 우주관문
+    do: "제련소 업그레이드 확인"
+    say: "업그레이드 확인"
   - at: "7:00"
-    do: 함대 신호소, 공중 업그레이드
-    say: 함대 신호소
+    do: "상위 테크 유닛 생산"
+    say: "상위 테크"

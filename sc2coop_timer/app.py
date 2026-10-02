@@ -19,7 +19,12 @@ log = logging.getLogger(__name__)
 
 POLL_MS = 500
 # SC2 기본 키(F5~F8 카메라, F10 게임 메뉴)와 겹치지 않도록 Ctrl+Alt 조합 사용
-HOTKEYS = {"overlay": "ctrl+alt+f8", "manual": "ctrl+alt+f9", "next_build": "ctrl+alt+f10"}
+HOTKEYS = {
+    "overlay": "ctrl+alt+f8",
+    "manual": "ctrl+alt+f9",
+    "next_build": "ctrl+alt+f10",
+    "skip_step": "ctrl+alt+f11",
+}
 APP_TITLE = "SC2 협동전 빌드 타이머"
 
 
@@ -29,6 +34,7 @@ class _Bridge(QObject):
     toggle_overlay = Signal()
     toggle_manual = Signal()
     next_build = Signal()
+    skip_step = Signal()
 
 
 class App:
@@ -56,6 +62,7 @@ class App:
         self.bridge.toggle_overlay.connect(self._toggle_overlay)
         self.bridge.toggle_manual.connect(self._toggle_manual)
         self.bridge.next_build.connect(self._next_build)
+        self.bridge.skip_step.connect(self._skip_step)
 
         self.timer = QTimer()
         self.timer.setInterval(POLL_MS)
@@ -78,6 +85,7 @@ class App:
             HOTKEYS["overlay"]: self.bridge.toggle_overlay.emit,
             HOTKEYS["manual"]: self.bridge.toggle_manual.emit,
             HOTKEYS["next_build"]: self.bridge.next_build.emit,
+            HOTKEYS["skip_step"]: self.bridge.skip_step.emit,
         })
         self.timer.start()
         self._on_tick()
@@ -110,6 +118,7 @@ class App:
                 action.triggered.connect(lambda _checked=False, k=build.key: self._select(k))
                 self._build_actions[build.key] = action
         self.menu.addSeparator()
+        self.menu.addAction("다음 단계 넘기기").triggered.connect(self._skip_step)
         voice = self.menu.addAction("음성 알림")
         voice.setCheckable(True)
         voice.setChecked(self.cfg.voice)
@@ -147,6 +156,10 @@ class App:
 
     def _toggle_manual(self) -> None:
         self.clock.toggle_manual()
+        self._on_tick()
+
+    def _skip_step(self) -> None:
+        self.session.skip_next()
         self._on_tick()
 
     def _toggle_overlay(self) -> None:

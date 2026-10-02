@@ -31,7 +31,7 @@ uv run python -m sc2coop_timer
 
 - SC2 설정 → 그래픽 → 디스플레이 모드: **창 모드(전체 화면)**
 - 트레이 아이콘 우클릭 → 사령관 → 빌드 선택
-- Ctrl+Alt+F8 오버레이 표시/숨김, Ctrl+Alt+F9 수동 시작/정지, Ctrl+Alt+F10 다음 빌드
+- Ctrl+Alt+F8 오버레이 표시/숨김, Ctrl+Alt+F9 수동 시작/정지, Ctrl+Alt+F10 다음 빌드, Ctrl+Alt+F11 다음 단계 넘기기
 - 빌드 수정: 트레이 → 빌드 폴더 열기 → YAML 편집(UTF-8 저장) → 빌드 다시 읽기
 
 ## 4. exe 빌드
@@ -48,5 +48,5 @@ uv run python -m sc2coop_timer
 - [ ] 일시정지 동안 `displayTime`이 멈춘다
 - [ ] 창 모드(전체 화면)에서 오버레이가 게임 위에 보이고, 클릭이 게임으로 통과한다
 - [ ] 한국어 음성으로 단계가 읽힌다 (없으면 설정 → 시간 및 언어 → 음성에서 한국어 음성 추가)
-- [ ] 게임 중 Ctrl+Alt+F8/Ctrl+Alt+F9/Ctrl+Alt+F10이 동작한다 (안 되면 앱을 관리자 권한으로 실행해 볼 것)
+- [ ] 게임 중 Ctrl+Alt+F8/Ctrl+Alt+F9/Ctrl+Alt+F10/Ctrl+Alt+F11이 동작한다 (안 되면 앱을 관리자 권한으로 실행해 볼 것)
 - [ ] exe 실행 시 내장 빌드 18개가 트레이 메뉴에 보인다

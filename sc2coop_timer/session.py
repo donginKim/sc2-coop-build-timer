@@ -22,10 +22,22 @@ class Session:
         self._game_id: int | None = None
         self._flip = False
         self._auto_shown: bool | None = None
+        self._skipped: frozenset[int] = frozenset()
+        self._seconds = 0.0
 
     def set_build(self, build: Build | None) -> None:
         self.build = build
         self._announced = frozenset()
+        self._skipped = frozenset()
+
+    def skip_next(self) -> None:
+        """아직 시각이 지나지 않은 맨 앞 단계를 완료 처리한다 (표시·알림에서 제외)."""
+        if self.build is None:
+            return
+        for i, step in enumerate(self.build.steps):
+            if i not in self._skipped and step.at > self._seconds:
+                self._skipped = self._skipped | {i}
+                return
 
     def toggle_visibility(self) -> None:
         self._flip = not self._flip
@@ -34,6 +46,8 @@ class Session:
         if reading.game_id != self._game_id:
             self._game_id = reading.game_id
             self._announced = frozenset()
+            self._skipped = frozenset()
+        self._seconds = reading.seconds
         auto_shown = overlay_visible(reading.state, False)
         if auto_shown != self._auto_shown:
             self._auto_shown = auto_shown
@@ -42,7 +56,9 @@ class Session:
         display: tuple[int, ...] = ()
         say: tuple[str, ...] = ()
         if self.build is not None:
-            result = tick(reading.seconds, self.build.steps, self._announced, self.build.lead_seconds)
+            result = tick(
+                reading.seconds, self.build.steps, self._announced, self.build.lead_seconds, skipped=self._skipped
+            )
             display = result.display
             if reading.state is State.IN_GAME:
                 self._announced = result.announced

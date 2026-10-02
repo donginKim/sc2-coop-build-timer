@@ -73,3 +73,9 @@ def test_display_after_last_step_empty():
 def test_empty_steps():
     r = tick(5.0, (), NONE, 3)
     assert (r.announce, r.display, r.announced) == ((), (), frozenset())
+
+
+def test_skipped_steps_not_displayed_or_announced():
+    r = tick(37.0, S, frozenset({0}), 3, skipped=frozenset({1}))
+    assert r.announce == ()
+    assert r.display == (2, 3, 4)

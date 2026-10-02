@@ -1,32 +1,37 @@
-# ⚠️ 추정치 — 실제 플레이로 타이밍을 조정하세요
+# 출처: https://starcraft2coop.com/commanders/horner — Build Order (원저자 Aommaster, CC-BY-NC-SA-4.0)
+# 위 빌드를 한국어로 옮기고 게임 시간을 덧붙인 2차 저작물이며 같은 CC-BY-NC-SA-4.0을 따릅니다.
+# ⚠️ supply(인구수)와 순서는 출처 기준, at(시간)은 인구수로부터 추정한 값입니다.
+# ⚠️ 4:00 웨이브 대비 이후의 일반 단계는 출처에 없는 추정 단계입니다.
 commander: han_horner
-name: 한&호너 기본 (미라 용병 + 호너 공중)
+name: 한&호너 경제 빌드
 verified: false
 steps:
-  - at: "0:00"
-    do: SCV 계속 생산
-  - at: "0:18"
-    do: 보급고
-  - at: "0:40"
-    do: 정제소 2개
+  - at: "0:20"
+    supply: 14
+    do: "보급고"
+  - at: "0:45"
+    supply: 17
+    do: "사령부"
   - at: "0:55"
-    do: 미라의 병영
-    say: 병영
-  - at: "1:30"
-    do: 용병 생산 시작
-    say: 용병 생산
-  - at: "2:30"
-    do: 우주공항, 호너 공중 유닛
-    say: 우주공항
-  - at: "3:00"
-    do: 확장 기지 정리 후 사령부
-    say: 확장 준비
+    supply: 18
+    do: "Assault Galleon"
+    say: "갤리온"
+  - at: "1:05"
+    supply: 19
+    do: "정제소"
+  - at: "1:10"
+    supply: 20
+    do: "정제소"
+  - at: "1:15"
+    supply: 20
+    do: "화염차 2기 → 바위"
+    say: "화염차 바위"
   - at: "4:00"
-    do: 첫 공격 웨이브 대비
+    do: "첫 공격 웨이브 대비"
     tag: wave
   - at: "5:00"
-    do: 공학 연구소·무기고 업그레이드
-    say: 업그레이드
+    do: "공학 연구소·무기고 업그레이드 확인"
+    say: "업그레이드 확인"
   - at: "7:00"
-    do: 공중 함대 확장
-    say: 함대 확장
+    do: "상위 테크 유닛 생산"
+    say: "상위 테크"
